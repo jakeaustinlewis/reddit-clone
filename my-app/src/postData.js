@@ -1,6 +1,6 @@
 const posts = [
     {
-      id: 1,
+      id: 0,
       title: `A Poem By Me`,
       author: `Iconic Irma`,
       imgURL: `https://loremflickr.com/320/240/paris`,
@@ -8,7 +8,7 @@ const posts = [
       comments: [`what a time to be alive`, `Not a fan tbh`]
     },
     {
-      id: 2,
+      id: 1,
       title: `Oh Poem My Poem`,
       author: `Emo Emma`,
       imgURL: `https://loremflickr.com/320/240/brazil,rio`,
@@ -20,7 +20,7 @@ const posts = [
       comments: []
     },
     {
-      id: 3,
+      id: 2,
       title: `It's All About Me |` ,
       author: `Hispter Henry`,
       imgURL: `https://loremflickr.com/320/240/paris,girl/all`,

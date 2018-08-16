@@ -3,19 +3,7 @@ import './App.css';
 import ReactDOM from 'react-dom'
 import postData from './postData';
 
-class Comments extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {  }
-  }
 
-  render() { 
-    return ( 
-        <ul className="marginFirstComment">{this.props.comments.map(comment=>
-          <li>{comment}</li>)}</ul>
-     );
-  }
-}
 
 class NewPostForm extends Component {
 constructor(props) {
@@ -51,7 +39,6 @@ render() {
   return (
         <form className="col-12 px-0 mt-3" onSubmit={(e)=>this.submitPost(e)}>
         
-
           <div className="form-group">
             <label htmlFor="title">Title</label>
             <input type="text" className="form-control" id="titleLabel" name="title" aria-describedby="title" placeholder="Enter Title" value={this.state.title} onChange={event=>this.handleChange(event)} />
@@ -115,17 +102,32 @@ class Sort extends Component {
           <button type="button" className="btn btn-primary float-right" onClick={()=>this.props.handleNewPostClick()}>New Post</button>
         </section>
           {this.props.newPostClick && <NewPostForm currentId={this.props.currentId} data={this.props.data} handleSubmit={this.props.handleSubmit}/>}
-   
+
       </div>
     );
   }
 }
 
-class Posts extends Component {
+// class Comments extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {  }
+//   }
+
+//   render() { 
+//     return ( 
+//         <ul className="marginFirstComment">{this.props.comments.map(comment=>
+//           <li>{comment}</li>)}</ul>
+//      );
+//   }
+// }
+
+class Post extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      commentButton: false
+      commentButton: false,
+      comments: this.props.data.comments
     }
   }
 
@@ -135,7 +137,50 @@ class Posts extends Component {
     });
   }
 
+  comments(comments) { 
+    return ( 
+        <ul className="marginFirstComment">
+          { 
+            comments.map((comment, index)=>{
+              return <li key={index}>{comment}</li>
+            })
+          } 
+        </ul>
+     );
+  }
+
+  // handleComment(e) {
+  //   e.preventDefault();
+  //   this.setState({[e.target.name]: e.target.value});
+  //   console.log('comment: ',this.state.comment);
+  // }
+
+  addComment(e) {
+    let newComment=[e.target.querySelector('input').value];
+
+    e.preventDefault();
+    this.setState({
+      comments: this.state.comments.concat(newComment)
+    });
+    console.log(this.state.comments);
+  }
+
+  commentsForm() {
+    return(
+      <form onSubmit={(e)=>this.addComment(e)}>
+        <div className="form-row align-items-center pt-3">
+          <div className="col-6">
+              <input type="text" className="form-control" id="commentSubmission" name="comments" placeholder=""/>
+          </div>
+        
+          <button type="submit" className="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    );
+  }
+
   render() { 
+    console.log('all comments',this.state.comments);
     return ( 
       <section className="row my-2 mx-0 rounded bg-light border">
 
@@ -154,10 +199,11 @@ class Posts extends Component {
 
           <div>{this.props.description}</div>
           <div className="d-flex mt-3">a few seconds ago | 
-            <i className="fas fa-comment-alt mx-1"></i> {this.props.comments.length}  <span className="ml-1 handCurser" onClick={()=>this.handleCommentButton()}>comments </span>
+            <i className="fas fa-comment-alt mx-1"></i> {this.state.comments.length}  <span className="ml-1 handCurser" onClick={()=>this.handleCommentButton()}>comments </span>
           </div>
           <div>
-            {this.state.commentButton && <Comments comments={this.props.comments}/>}
+            {this.state.commentButton && this.comments(this.state.comments)}
+            {this.state.commentButton && this.commentsForm()}
 
 
           </div>
@@ -177,11 +223,15 @@ class App extends Component {
     super(props);
     this.state={
       data: postData,
-      newPostClick: false
+      newPostClick: false,
+      comments: []
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleNewPostClick = this.handleNewPostClick.bind(this);
+    this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
   }
+
+  
 
   handleNewPostClick () {
     this.setState({
@@ -198,7 +248,21 @@ class App extends Component {
     });
   }
 
+  handleCommentSubmit(e, comment, key) {
+    e.preventDefault();
+    console.log('comment: ', comment);
+    console.log('key: ', key);
+    console.log('comment list: ',this.state.comments[key].concat([comment]));
+    this.setState({
+      comments: this.state.comments[key].concat([comment])
+    })
+  }
+
+
+  
+
   render() {
+    
     return(
       <div>
         <nav className="navbar navbar-expand-lg navbar-light border-bottom" style={{backgroundColor: '#f7f7f7'}}>
@@ -215,9 +279,9 @@ class App extends Component {
         <section className="container-fliud">
           <div className="row d-flex justify-content-center">
             <div className="col-11">
-              <Sort currentId={this.state.data.length} data={this.state.data} handleSubmit={this.handleSubmit} handleNewPostClick={this.handleNewPostClick} newPostClick={this.state.newPostClick}/>
+              <Sort currentId={this.state.data.length} data={this.state.data} handleSubmit={this.handleSubmit} handleNewPostClick={this.handleNewPostClick} newPostClick={this.state.newPostClick} />
               {this.state.data.map(post => 
-              <Posts data={post} key={post.id} img={post.imgURL} title={post.title} author={post.author} description={post.description} comments={post.comments}/>
+              <Post data={post} key={post.id} img={post.imgURL} title={post.title} author={post.author} description={post.description} comments={post.comments} handleCommentSubmit={this.handleCommentSubmit}/>
               )}
             </div>
           </div>
