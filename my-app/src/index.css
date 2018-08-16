@@ -3,3 +3,20 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+
+.arrowGreen {
+  color: green;
+}
+
+.arrowRed {
+  color: red;
+}
+
+.handCurser{
+  cursor: pointer;
+}
+
+.marginFirstComment:first-child {
+  margin-top: 15px;
+}
