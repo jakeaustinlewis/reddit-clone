@@ -14,9 +14,8 @@ constructor(props) {
     description: '',
     author: '',
     imgURL: '',
-    comments: ['']
+    comments: []
   };
-
 }
 
 submitPost(e) {
@@ -102,32 +101,39 @@ class Sort extends Component {
           <button type="button" className="btn btn-primary float-right" onClick={()=>this.props.handleNewPostClick()}>New Post</button>
         </section>
           {this.props.newPostClick && <NewPostForm currentId={this.props.currentId} data={this.props.data} handleSubmit={this.props.handleSubmit}/>}
-
       </div>
     );
   }
 }
-
-// class Comments extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {  }
-//   }
-
-//   render() { 
-//     return ( 
-//         <ul className="marginFirstComment">{this.props.comments.map(comment=>
-//           <li>{comment}</li>)}</ul>
-//      );
-//   }
-// }
 
 class Post extends Component {
   constructor(props) {
     super(props);
     this.state = {
       commentButton: false,
-      comments: this.props.data.comments
+      comments: this.props.data.comments,
+      upArrow: false,
+      downArrow: false,
+      arrowCount: 0
+    }
+    this.handleUpArrow = this.handleUpArrow.bind(this);
+    this.handleDownArrow = this.handleDownArrow.bind(this);
+  }
+
+  handleUpArrow() {
+    this.setState({
+      arrowCount: this.state.arrowCount + 1,
+      upArrow: !this.state.upArrow
+    });
+  }
+
+  handleDownArrow() {
+    if(this.state.arrowCount===0){
+    } else {
+      this.setState({
+        arrowCount: this.state.arrowCount - 1,
+        upArrow: !this.state.downArrow
+      });
     }
   }
 
@@ -149,12 +155,6 @@ class Post extends Component {
      );
   }
 
-  // handleComment(e) {
-  //   e.preventDefault();
-  //   this.setState({[e.target.name]: e.target.value});
-  //   console.log('comment: ',this.state.comment);
-  // }
-
   addComment(e) {
     let newComment=[e.target.querySelector('input').value];
 
@@ -172,7 +172,7 @@ class Post extends Component {
           <div className="col-6">
               <input type="text" className="form-control" id="commentSubmission" name="comments" placeholder=""/>
           </div>
-        
+
           <button type="submit" className="btn btn-primary">Submit</button>
         </div>
       </form>
@@ -180,7 +180,8 @@ class Post extends Component {
   }
 
   render() { 
-    console.log('all comments',this.state.comments);
+    console.log('all data: ', this.props.data);
+    console.log('all comments: ',this.state.comments);
     return ( 
       <section className="row my-2 mx-0 rounded bg-light border">
 
@@ -193,8 +194,9 @@ class Post extends Component {
           <div className="mb-2 d-flex">
             <p className="font-weight-bold">{this.props.title} |</p> 
             <div className="text-right d-md-none">{this.props.author}</div>
-            <i className="fas fa-arrow-up mx-1 arrowGreen"></i>
-            <i className="fas fa-arrow-down mx-1 arrowRed"></i>
+            <i id="upArrow" className="fas fa-arrow-up mx-1 arrowGreen handCurser" onClick={this.handleUpArrow}></i>
+            <i id="downArrow" className="fas fa-arrow-down mx-1 arrowRed handCurser" onClick={this.handleDownArrow}></i>
+            <div>{this.state.arrowCount}</div>
           </div>
 
           <div>{this.props.description}</div>
@@ -228,10 +230,7 @@ class App extends Component {
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleNewPostClick = this.handleNewPostClick.bind(this);
-    this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
   }
-
-  
 
   handleNewPostClick () {
     this.setState({
@@ -247,19 +246,6 @@ class App extends Component {
       data: this.state.data.concat([obj]),
     });
   }
-
-  handleCommentSubmit(e, comment, key) {
-    e.preventDefault();
-    console.log('comment: ', comment);
-    console.log('key: ', key);
-    console.log('comment list: ',this.state.comments[key].concat([comment]));
-    this.setState({
-      comments: this.state.comments[key].concat([comment])
-    })
-  }
-
-
-  
 
   render() {
     
