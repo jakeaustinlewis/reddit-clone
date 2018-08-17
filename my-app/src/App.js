@@ -19,7 +19,6 @@ constructor(props) {
 }
 
 submitPost(e) {
-  console.log('submitPost id: ',this.state.id);
   this.props.handleSubmit(e, this.state);
 
   this.setState({
@@ -112,8 +111,6 @@ class Post extends Component {
     this.state = {
       commentButton: false,
       comments: this.props.data.comments,
-      upArrow: false,
-      downArrow: false,
       arrowCount: 0
     }
     this.handleUpArrow = this.handleUpArrow.bind(this);
@@ -123,16 +120,13 @@ class Post extends Component {
   handleUpArrow() {
     this.setState({
       arrowCount: this.state.arrowCount + 1,
-      upArrow: !this.state.upArrow
     });
   }
 
   handleDownArrow() {
-    if(this.state.arrowCount===0){
-    } else {
+    if(this.state.arrowCount!==0){
       this.setState({
         arrowCount: this.state.arrowCount - 1,
-        upArrow: !this.state.downArrow
       });
     }
   }
@@ -162,7 +156,6 @@ class Post extends Component {
     this.setState({
       comments: this.state.comments.concat(newComment)
     });
-    console.log(this.state.comments);
   }
 
   commentsForm() {
@@ -180,8 +173,6 @@ class Post extends Component {
   }
 
   render() { 
-    console.log('all data: ', this.props.data);
-    console.log('all comments: ',this.state.comments);
     return ( 
       <section className="row my-2 mx-0 rounded bg-light border">
 
@@ -241,7 +232,6 @@ class App extends Component {
   handleSubmit(e, obj) {
     e.preventDefault();
     obj.id=this.state.data.length+1;
-    console.log('after added: ',obj.id);
     this.setState({
       data: this.state.data.concat([obj]),
     });
@@ -261,7 +251,7 @@ class App extends Component {
             </ul>
           </div>
         </nav>
-
+        <hahaha></hahaha>
         <section className="container-fliud">
           <div className="row d-flex justify-content-center">
             <div className="col-11">
@@ -274,7 +264,6 @@ class App extends Component {
         </section>
       </div>
     );
-  
   }
 }
     
